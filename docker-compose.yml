@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:15
+    container_name: directus-db
+    restart: always
+    environment:
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: directuspassword
+      POSTGRES_DB: directus
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  directus:
+    image: directus/directus:latest
+    container_name: directus-app
+    restart: always
+    ports:
+      - "8055:8055"
+    depends_on:
+      - db
+    environment:
+      KEY: "randomkey123456789"
+      SECRET: "randomsecret123456789"
+      ADMIN_EMAIL: "admin@gmail.com"
+      ADMIN_PASSWORD: "Admin@12345"
+      DB_CLIENT: "pg"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directuspassword"
+
+      STORAGE_LOCATIONS: "s3"
+      STORAGE_S3_DRIVER: "s3"
+      STORAGE_S3_KEY: "${STORAGE_S3_KEY}"
+      STORAGE_S3_SECRET: "${STORAGE_S3_SECRET}"
+      STORAGE_S3_BUCKET: "directus-vega-hari-2026"
+      STORAGE_S3_REGION: "ap-south-1"
+
+volumes:
+  db_data:
